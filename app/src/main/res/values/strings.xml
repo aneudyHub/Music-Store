@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">MusicStore</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_store">Store</string>
+    <string name="title_library">Library</string>
+    <string name="title_account">Account</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="action_settings">Settings</string>
+<!--    music detail activity -->
+
+    <string name="music_detail_activity_label">Show more like this</string>
+    <string name="music_detail_activity_buy_btn">Buy now</string>
+    <string name="store_search_hint">Name, Artist , Album</string>
 </resources>
