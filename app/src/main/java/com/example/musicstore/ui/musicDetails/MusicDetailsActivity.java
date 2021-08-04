@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +26,8 @@ import com.example.musicstore.repository.presenters.MusicDetailActivityPresenter
 import com.example.musicstore.repository.viewModels.MusicDetailActivityContract;
 import com.example.musicstore.ui.adapters.StoreSearchAdapter;
 
+import java.io.IOException;
+
 public class MusicDetailsActivity extends AppCompatActivity implements MusicDetailActivityContract.iView {
 
     private MusicDetailActivityContract.iListener iListener;
@@ -33,6 +37,7 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
     private TextView tvTrackName,tvArtist,tvTrackPrice;
     private ImageView ivTrackPicture;
     private ConstraintLayout clTopPanel;
+    private ImageView ivPlayMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,17 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
         tvTrackPrice = findViewById(R.id.tvPriceMusicDetail);
         ivTrackPicture = findViewById(R.id.ivTrackPictureMusicDetail);
 
+        ivPlayMusic = findViewById(R.id.ivPlayMusicDetail);
+        ivPlayMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    iListener.playTheMusic(musicData.getPreviewUrl());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         if(musicData!= null){
 //            if(iListener != null){
                 iListener.loadMoreMusicList(musicData.getArtistName()+" "+musicData.getCollectionName());
@@ -116,5 +132,14 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
     @Override
     public void showCheckOutFrame() {
 
+    }
+
+    @Override
+    public void handlePlayButton(Boolean b) {
+        if(b){
+            ivPlayMusic.setImageDrawable(getDrawable(R.drawable.ic_baseline_stop_24));
+        }else{
+            ivPlayMusic.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
+        }
     }
 }
