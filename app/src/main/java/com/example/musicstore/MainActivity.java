@@ -1,5 +1,6 @@
 package com.example.musicstore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -9,6 +10,7 @@ import com.example.musicstore.ui.user.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -22,16 +24,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(navListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main,new StoreFragment()).commit();
+        if(savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main,new StoreFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -56,5 +59,12 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100){
+            navView.setSelectedItemId(R.id.navigation_library);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main,new LibraryFragment()).commit();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.musicstore.ui.store;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import com.example.musicstore.repository.models.SearchResponse;
 import com.example.musicstore.repository.presenters.StoreFragmentPresenter;
 import com.example.musicstore.repository.viewModels.StoreFragmentContract;
 import com.example.musicstore.ui.adapters.StoreSearchAdapter;
+import com.example.musicstore.ui.musicDetails.MusicDetailsActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -105,7 +107,14 @@ public class StoreFragment extends Fragment implements StoreFragmentContract.IVi
     @Override
     public void showSearchRequest(SearchResponse searchResponse) {
         ArrayList<Music> m = searchResponse.getResults();
-        adpStoreSearch= new StoreSearchAdapter(context,m);
+        adpStoreSearch= new StoreSearchAdapter(context, m, new StoreSearchAdapter.iAdpActivityComunication() {
+            @Override
+            public void onTrackClick(Music music) {
+                Intent i = new Intent(context, MusicDetailsActivity.class);
+                i.putExtra("music",music);
+                getActivity().startActivityForResult(i,100);
+            }
+        });
         rvMusicList.setAdapter(adpStoreSearch);
     }
 }

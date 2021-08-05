@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.musicstore.R;
+import com.example.musicstore.repository.models.CheckOut;
 import com.example.musicstore.repository.models.Music;
 import com.example.musicstore.repository.models.SearchResponse;
 import com.example.musicstore.repository.presenters.MusicDetailActivityPresenter;
@@ -28,7 +30,7 @@ import com.example.musicstore.ui.adapters.StoreSearchAdapter;
 
 import java.io.IOException;
 
-public class MusicDetailsActivity extends AppCompatActivity implements MusicDetailActivityContract.iView {
+public class MusicDetailsActivity extends AppCompatActivity implements MusicDetailActivityContract.iView,CheckOutDialogFragment.OnCheckOutFragmentListener {
 
     private MusicDetailActivityContract.iListener iListener;
     private RecyclerView rvMoreMusicList;
@@ -38,6 +40,7 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
     private ImageView ivTrackPicture;
     private ConstraintLayout clTopPanel;
     private ImageView ivPlayMusic;
+    private Button btnCheckOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,14 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
         rvMoreMusicList.setLayoutManager(layoutManager);
 
         clTopPanel = findViewById(R.id.clTopPanelMusicDetail);
+
+        btnCheckOut = findViewById(R.id.btnBuyNowMusicDetail);
+        btnCheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCheckOutFrame();
+            }
+        });
 
 
         tvArtist = findViewById(R.id.tvArtistMusicDetail);
@@ -84,7 +95,7 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
 //            }
             tvArtist.setText(musicData.getArtistName());
             tvTrackName.setText(musicData.getTrackName());
-            tvTrackPrice.setText(String.valueOf(musicData.getTrackPrice()));
+            tvTrackPrice.setText("$ "+String.valueOf(musicData.getTrackPrice()));
             Glide.with(this)
                     .load(musicData.getArtworkUrl60())
                     .into(ivTrackPicture);
@@ -120,7 +131,12 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
 
     @Override
     public void showMoreMusicList(SearchResponse searchResponse) {
-        adpMusicList = new StoreSearchAdapter(this,searchResponse.getResults());
+        adpMusicList = new StoreSearchAdapter(this, searchResponse.getResults(), new StoreSearchAdapter.iAdpActivityComunication() {
+            @Override
+            public void onTrackClick(Music music) {
+
+            }
+        });
         rvMoreMusicList.setAdapter(adpMusicList);
     }
 
@@ -131,7 +147,9 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
 
     @Override
     public void showCheckOutFrame() {
-
+        FragmentManager fm = getSupportFragmentManager();
+        CheckOutDialogFragment checkOutDialogFragment = CheckOutDialogFragment.newInstance(musicData);
+        checkOutDialogFragment.show(fm, "check_out_frame");
     }
 
     @Override
@@ -141,5 +159,12 @@ public class MusicDetailsActivity extends AppCompatActivity implements MusicDeta
         }else{
             ivPlayMusic.setImageDrawable(getDrawable(R.drawable.ic_baseline_play_arrow_24));
         }
+    }
+
+    @Override
+    public void onCheckOut(CheckOut checkOut) {
+        checkOut.processCheckOut();
+        setResult(RESULT_OK);
+        finish();
     }
 }

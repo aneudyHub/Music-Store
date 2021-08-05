@@ -10,4 +10,10 @@
     <string name="music_detail_activity_label">Show more like this</string>
     <string name="music_detail_activity_buy_btn">Buy now</string>
     <string name="store_search_hint">Name, Artist , Album</string>
+    <string name="dialog_fragment_checkout_title">Check Out</string>
+    <string name="dialog_fragment_checkout_btn_cancel">Cancel</string>
+    <string name="dialog_fragment_checkout_creditcard_number_hint">Credit Card Number</string>
+    <string name="dialog_fragment_checkout_creditcard_holder_hint">Credit Card Holder</string>
+    <string name="dialog_fragment_checkout_creditcard_expiration">Expiration Date</string>
+    <string name="dialog_fragment_checkout_creditcard_code">CSV</string>
 </resources>

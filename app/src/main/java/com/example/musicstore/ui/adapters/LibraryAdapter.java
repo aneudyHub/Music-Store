@@ -21,20 +21,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class StoreSearchAdapter extends RecyclerView.Adapter<StoreSearchAdapter.ViewHolder> {
+public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHolder> {
 
     private ArrayList<Music> musicArrayList;
     private Context context;
-    private iAdpActivityComunication iActivityComunication;
 
-    public StoreSearchAdapter(Context context, ArrayList<Music> musicArrayList,iAdpActivityComunication iActivityComunication){
+    public LibraryAdapter(Context context, ArrayList<Music> musicArrayList){
         this.musicArrayList = musicArrayList;
         this.context = context;
-        this.iActivityComunication = iActivityComunication;
-    }
-
-    public interface iAdpActivityComunication{
-        void onTrackClick(Music music);
     }
 
 
@@ -52,19 +46,11 @@ public class StoreSearchAdapter extends RecyclerView.Adapter<StoreSearchAdapter.
         Music music = musicArrayList.get(position);
         holder.trackName.setText(music.getTrackName());
         holder.artist.setText(music.getArtistName());
-        holder.price.setText("$ "+String.valueOf(music.getTrackPrice()));
+        holder.price.setVisibility(View.GONE);
+        holder.ivMore.setVisibility(View.GONE);
         Glide.with(context)
                 .load(music.getArtworkUrl60())
-                .into(holder.picture);
-
-        holder.setItemClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                if(view.getId()== R.id.musicItemContainer){
-                    iActivityComunication.onTrackClick(musicArrayList.get(position));
-                }
-            }
-        });
+                .into(holder.ivTrackPicture);
     }
 
     @Override
@@ -78,14 +64,15 @@ public class StoreSearchAdapter extends RecyclerView.Adapter<StoreSearchAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private ImageView picture;
+        private ImageView ivTrackPicture,ivMore;
         private ConstraintLayout container;
         private TextView artist,trackName,price;
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             this.container = itemView.findViewById(R.id.musicItemContainer);
             this.container.setOnClickListener(this);
-            this.picture = itemView.findViewById(R.id.ivMusicPic);
+            this.ivMore = itemView.findViewById(R.id.ivMore);
+            this.ivTrackPicture = itemView.findViewById(R.id.ivMusicPic);
             this.artist = itemView.findViewById(R.id.tvArtist);
             this.trackName = itemView.findViewById(R.id.tvTrackName);
             this.price = itemView.findViewById(R.id.tvPrice);
@@ -103,3 +90,4 @@ public class StoreSearchAdapter extends RecyclerView.Adapter<StoreSearchAdapter.
         }
     }
 }
+
